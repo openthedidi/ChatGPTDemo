@@ -1,7 +1,10 @@
 package com.example.chatgptdemo.aws.model.controller;
 
 import com.example.chatgptdemo.aws.model.ChatRequest;
+import com.example.chatgptdemo.aws.model.logic.OpenAIService;
+import com.example.chatgptdemo.aws.model.logic.ResponseGenerationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -9,6 +12,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import reactor.core.publisher.Mono;
+
+import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,6 +22,9 @@ public class AwsController {
 
     @Value("${openai.api.key}")  // 從application.properties或您的配置源讀取API密鑰
     private String apiKey;
+
+    @Autowired
+    private final ResponseGenerationService responseGenerationService;
 
 
     @CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
@@ -40,5 +49,19 @@ public class AwsController {
 
         // 返回從OpenAI API接收到的回應
         return response;
+    }
+
+
+
+    @CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
+    @RequestMapping(value = "/getChatGptAns", produces = {"application/json"}, method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<String> getChatGptAns(@RequestParam String question) throws IOException {
+
+        //將responseMono轉換為String
+        String response = responseGenerationService.generateResponse(question);
+
+
+        return ResponseEntity.ok(response);
     }
 }
