@@ -115,7 +115,8 @@ public class ResponseGenerationService {
                 .replace("payment_period", "繳費期間")
                 .replace("assure_list", "保障項目");
         log.info("formatContentt: {}", formatContent);
-        String responseText = openAIService.generateResponseByString(formatContent);
+        String responseText = openAIService.generateResponseByString(formatContent, question);
+        log.info("Response: {}", responseText);
         return "responseText";
 
     }

@@ -34,7 +34,7 @@ class OpenAIServiceTest {
                 "      \"url\": \"/product/103/115\",\n" +
                 "      \"url_blank\": false,\n" +
                 "      \"url_type\": \"INSIDE\"\n" +
-                "    }}");
+                "    }}", "我是18歲，可以幫我推薦合適的住院保險商品嗎");
 
         assertNotNull(response);
         System.out.println(response);
